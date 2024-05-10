@@ -1,21 +1,17 @@
 package com.m2bar.Banking.System.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "transaction")
 public class Transaction {
@@ -32,6 +28,6 @@ public class Transaction {
     private LocalDateTime timestamp;
 
     @ManyToOne
-    @Column(name = "account")
+    @JoinColumn(name = "account_id")
     private Account account;
 }

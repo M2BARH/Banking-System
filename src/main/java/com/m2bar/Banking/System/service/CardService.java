@@ -8,5 +8,9 @@ public interface CardService {
 
     CardDto createCard(CardDto card);
 
+    CardDto getCardId(Long customerId);
+
+    List<CardDto> getAllCards();
+
     List<CardDto> getAllCardsByCustomerId(Long customerId);
 }

@@ -11,6 +11,7 @@ paths:
   /customers:
     post:
       summary: Create a new customer
+      operationId: createCustomer
       requestBody:
         required: true
         content:
@@ -26,6 +27,7 @@ paths:
                 $ref: '#/components/schemas/CustomerDto'
     get:
       summary: Get all customers
+      operationId: getAllCustomers
       responses:
         '200':
           description: Successful response
@@ -39,6 +41,7 @@ paths:
   /customers/{customerId}:
     get:
       summary: Get a customer by ID
+      operationId: getCustomerById
       parameters:
         - in: path
           name: customerId
@@ -57,6 +60,7 @@ paths:
           description: Customer not found
     put:
       summary: Update a customer
+      operationId: updateCustomerById
       parameters:
         - in: path
           name: customerId
@@ -81,6 +85,7 @@ paths:
           description: Customer not found
     delete:
       summary: Delete a customer
+      operationId: deleteCustomerById
       parameters:
         - in: path
           name: customerId
@@ -97,13 +102,13 @@ paths:
   /customers/{identityNumber}:
     get:
       summary: Get a customer by identity number
+      operationId: getCustomerByIdentityNumber
       parameters:
         - in: path
           name: identityNumber
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: Successful response
@@ -117,6 +122,7 @@ paths:
   /accounts:
     post:
       summary: Create a new account
+      operationId: createAccount
       requestBody:
         required: true
         content:
@@ -132,6 +138,7 @@ paths:
                 $ref: '#/components/schemas/AccountDto'
     get:
       summary: Get all accounts
+      operationId: getAllAccounts
       responses:
         '200':
           description: Successful response
@@ -145,6 +152,7 @@ paths:
   /accounts/{accountId}:
     get:
       summary: Get an account by ID
+      operationId: getAccountById
       parameters:
         - in: path
           name: accountId
@@ -163,6 +171,7 @@ paths:
           description: Account not found
     put:
       summary: Update an account
+      operationId: updateAccountById
       parameters:
         - in: path
           name: accountId
@@ -187,6 +196,7 @@ paths:
           description: Account not found
     delete:
       summary: Delete an account
+      operationId: deleteAccountById
       parameters:
         - in: path
           name: accountId
@@ -200,16 +210,16 @@ paths:
         '404':
           description: Account not found
 
-  /accounts/{accountNumber}:
+  /accounts/number/{accountNumber}:
     get:
       summary: Get all accounts by account number
+      operationId: getAccountByAccountNumber
       parameters:
         - in: path
           name: accountNumber
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: Successful response
@@ -220,9 +230,10 @@ paths:
         '404':
           description: Account not found
 
-  /accounts/{customerId}:
+  /accounts/customer/{customerId}:
     get:
       summary: Get all accounts by customer ID
+      operationId: getAllAccountsByCustomerId
       parameters:
         - in: path
           name: customerId
@@ -242,9 +253,56 @@ paths:
         '404':
           description: Account not found
 
+  /accounts/transact/{accountId}:
+    post:
+      summary: Top up account balance
+      operationId: topUpAccountByAccountId
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: amount
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+    get:
+      summary: Reduce account balance
+      operationId: reduceAccountByAccountId
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: amount
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+
   /addresses:
     post:
       summary: Create a new address
+      operationId: createAddress
       requestBody:
         required: true
         content:
@@ -260,6 +318,7 @@ paths:
                 $ref: '#/components/schemas/AddressDto'
     get:
       summary: Get all addresses
+      operationId: getAllAddresses
       responses:
         '200':
           description: Successful response
@@ -273,6 +332,7 @@ paths:
   /addresses/{addressId}:
     get:
       summary: Get an address by ID
+      operationId: getAddressById
       parameters:
         - in: path
           name: addressId
@@ -291,6 +351,7 @@ paths:
           description: Address not found
     put:
       summary: Update an address
+      operationId: updateAddressById
       parameters:
         - in: path
           name: addressId
@@ -315,6 +376,7 @@ paths:
           description: Address not found
     delete:
       summary: Delete an address
+      operationId: deleteAddressById
       parameters:
         - in: path
           name: addressId
@@ -331,13 +393,7 @@ paths:
   /cards:
     post:
       summary: Create a new card
-      parameters:
-        - in: path
-          name: customerId
-          required: true
-          schema:
-            type: integer
-            format: int64
+      operationId: createCard
       requestBody:
         required: true
         content:
@@ -354,14 +410,8 @@ paths:
         '404':
           description: Card not found
     get:
-      summary: Get all cards by customer ID
-      parameters:
-        - in: path
-          name: customerId
-          required: true
-          schema:
-            type: integer
-            format: int64
+      summary: Get all cards
+      operationId: getAllCards
       responses:
         '200':
           description: Successful response
@@ -377,9 +427,55 @@ paths:
   /cards/{cardId}:
     get:
       summary: Get card by ID
+      operationId: getCardById
       parameters:
         - in: path
           name: cardId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+    post:
+      summary: Block card
+      operationId: blockCardById
+      parameters:
+        - in: path
+          name: cardId
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: status
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+
+  /cards/customer/{customerId}:
+    get:
+      summary: Get all cards by customer id
+      operationId: getAllCardBsyCustomerId
+      parameters:
+        - in: path
+          name: customerId
           required: true
           schema:
             type: integer
@@ -399,13 +495,7 @@ paths:
   /transactions:
     post:
       summary: Create a new transaction
-      parameters:
-        - in: path
-          name: accountId
-          required: true
-          schema:
-            type: integer
-            format: int64
+      operationId: createTransaction
       requestBody:
         required: true
         content:
@@ -421,8 +511,32 @@ paths:
                 $ref: '#/components/schemas/TransactionDto'
         '404':
           description: Account not found
+
+  /transactions/transactionId}:
     get:
-      summary: Get all transactions by account ID
+      summary: Get transaction by ID
+      operationId: getTransactionById
+      parameters:
+        - in: path
+          name: transactionId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+        '404':
+          description: Transaction not found
+
+  /transactions/account/{accountId}:
+    get:
+      summary: Get all transactions
+      operationId: getAllTransactionsByAccountId
       parameters:
         - in: path
           name: accountId
@@ -442,29 +556,10 @@ paths:
         '404':
           description: Account not found
 
-  /transactions/{transactionId}:
-    get:
-      summary: Get transaction by ID
-      parameters:
-        - in: path
-          name: transactionId
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionDto'
-        '404':
-          description: Transaction not found
-
   /branches:
     post:
       summary: Create a new branch
+      operationId: createBranch
       requestBody:
         required: true
         content:
@@ -480,6 +575,7 @@ paths:
                 $ref: '#/components/schemas/BranchDto'
     get:
       summary: Get all branches
+      operationId: getAllBranches
       responses:
         '200':
           description: Successful response
@@ -493,6 +589,7 @@ paths:
   /branches/{branchId}:
     get:
       summary: Get a branch by ID
+      operationId: getBranchById
       parameters:
         - in: path
           name: branchId
@@ -511,6 +608,7 @@ paths:
           description: Branch not found
     put:
       summary: Update a branch
+      operationId: updateBranchById
       parameters:
         - in: path
           name: branchId
@@ -524,6 +622,48 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/BranchDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchDto'
+        '404':
+          description: Branch not found
+
+  /branches/name:
+    get:
+      summary: Get a branch by ID
+      operationId: getBranchByName
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BranchDto'
+        '404':
+          description: Branch not found
+
+  /branches/code:
+    get:
+      summary: Get a branch by ID
+      operationId: getBranchByCode
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successful response
@@ -565,6 +705,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CardDto'
+        password:
+          type: string
 
     AddressDto:
       type: object
@@ -596,10 +738,6 @@ components:
           format: double
         accountType:
           type: string
-          enum:
-            - SAVINGS
-            - CHECKING
-            - INVESTMENT
         customer:
           $ref: '#/components/schemas/CustomerDto'
         transactions:
@@ -614,6 +752,8 @@ components:
           type: integer
           format: int64
         name:
+          type: string
+        code:
           type: string
         address:
           $ref: '#/components/schemas/AddressDto'
@@ -649,3 +789,5 @@ components:
           format: date
         customer:
           $ref: '#/components/schemas/CustomerDto'
+        status:
+          type: string
