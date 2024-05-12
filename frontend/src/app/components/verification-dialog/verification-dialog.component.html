@@ -1,0 +1,21 @@
+<div class="container">
+  <h2 class="header">Verification Code</h2>
+  <div class="content">
+    <p>
+      An email has been sent to your email address with a verification code.
+      Please enter the code below:
+    </p>
+    <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()">
+      <input
+        matInput
+        type="number"
+        formControlName="verificationCode"
+        placeholder="Enter verification code"
+      />
+    </form>
+  </div>
+  <div class="buttons">
+    <button class="btn-confirm" (click)="onSubmit()">Confirm</button>
+    <button class="btn-dismiss" (click)="onDismiss()">Dismiss</button>
+  </div>
+</div>
