@@ -1,0 +1,179 @@
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+  rel="stylesheet"
+/>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h1>Sign Up</h1>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+        <div class="form-group">
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            class="form-control"
+            placeholder="Enter your first names"
+            [ngClass]="{
+              error:
+                loginForm.controls['firstName'].invalid &&
+                loginForm.controls['firstName'].touched
+            }"
+          />
+          <span
+            class="error-message"
+            *ngIf="
+              loginForm.controls['firstName'].invalid &&
+              loginForm.controls['firstName'].touched
+            "
+          >
+            First Names cannot be empty
+          </span>
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            class="form-control"
+            placeholder="Enter your last name"
+            [ngClass]="{
+              error:
+                loginForm.controls['lastName'].invalid &&
+                loginForm.controls['lastName'].touched
+            }"
+          />
+          <span
+            class="error-message"
+            *ngIf="
+              loginForm.controls['lastName'].invalid &&
+              loginForm.controls['lastName'].touched
+            "
+          >
+            Last name cannot be empty
+          </span>
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            id="identityNumber"
+            formControlName="identityNumber"
+            class="form-control"
+            placeholder="Enter your identity number"
+            [ngClass]="{
+              error:
+                loginForm.controls['identityNumber'].invalid &&
+                loginForm.controls['identityNumber'].touched
+            }"
+          />
+          <span
+            class="error-message"
+            *ngIf="
+              loginForm.hasError('invalidId') &&
+              loginForm.controls['identityNumber'].touched
+            "
+          >
+            Identity number cannot be empty
+          </span>
+        </div>
+        <div class="form-group">
+          <input
+            type="text"
+            autocomplete="username"
+            id="username"
+            formControlName="username"
+            class="form-control"
+            placeholder="Enter your username"
+            [ngClass]="{
+              error:
+                loginForm.controls['username'].invalid &&
+                loginForm.controls['username'].touched
+            }"
+          />
+          <span
+            class="error-message"
+            *ngIf="
+              loginForm.controls['username'].invalid &&
+              loginForm.controls['username'].touched
+            "
+          >
+            Username cannot be empty
+          </span>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <input
+              type="password"
+              autocomplete="new-password"
+              id="password"
+              formControlName="password"
+              class="form-control"
+              placeholder="Enter your password"
+              [ngClass]="{
+                error:
+                  loginForm.controls['password'].invalid &&
+                  loginForm.controls['password'].touched
+              }"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="togglePasswordVisibility('password')"
+            >
+              <i class="fas fa-eye" *ngIf="passwordHidden"></i>
+              <i class="fas fa-eye-slash" *ngIf="!passwordHidden"></i>
+            </button>
+          </div>
+          <span
+            class="error-message"
+            *ngIf="
+              loginForm.controls['password'].invalid &&
+              loginForm.controls['password'].touched
+            "
+          >
+            Password cannot be empty
+          </span>
+        </div>
+        <div class="form-group">
+          <input
+            type="password"
+            autocomplete="new-password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            class="form-control"
+            placeholder="Confirm Password"
+            [ngClass]="{
+              error:
+                loginForm.hasError('confirmPasswordError') &&
+                loginForm.controls['confirmPassword'].touched
+            }"
+          />
+          <span
+            class="error-message"
+            *ngIf="
+              loginForm.hasError('confirmPasswordError') &&
+              loginForm.controls['confirmPassword'].touched
+            "
+          >
+            {{ loginForm.getError("confirmPasswordError") }}
+          </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!loginForm.valid"
+          >
+            Sign In
+          </button>
+          <div class="links">
+            <a routerLink="/signin" class="text-decoration-none">Sign in</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

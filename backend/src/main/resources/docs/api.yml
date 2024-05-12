@@ -1,0 +1,990 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Simple Banking System API
+  description: A simple API to illustrate Banking System concepts
+
+servers:
+  - url: http://localhost:8080/
+
+paths:
+  /users/signin:
+    post:
+      summary: Sign In
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginReq'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '404':
+          description: Customer not found
+
+  /users/signup:
+    post:
+      summary: Create new user
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '403':
+          description: Forbidden response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+
+  /users/verification/email:
+    post:
+      summary: Send verification code
+      operationId: sendVerificationCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '403':
+          description: Forbidden response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+
+  /users/reset/password:
+    post:
+      summary: Reset password
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '403':
+          description: Forbidden response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringResponse'
+
+  /customers:
+    post:
+      summary: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDto'
+      security:
+        - bearerAuth: [ ]
+    get:
+      summary: Get all customers
+      operationId: getAllCustomers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerDto'
+      security:
+        - bearerAuth: [ ]
+
+  /customers/{customerId}:
+    get:
+      summary: Get a customer by ID
+      operationId: getCustomerById
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDto'
+        '404':
+          description: Customer not found
+      security:
+        - bearerAuth: [ ]
+    put:
+      summary: Update a customer
+      operationId: updateCustomerById
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDto'
+        '404':
+          description: Customer not found
+      security:
+        - bearerAuth: [ ]
+    delete:
+      summary: Delete a customer
+      operationId: deleteCustomerById
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Successful response
+        '404':
+          description: Customer not found
+      security:
+        - bearerAuth: [ ]
+
+  /customers/{identityNumber}:
+    get:
+      summary: Get a customer by identity number
+      operationId: getCustomerByIdentityNumber
+      parameters:
+        - in: path
+          name: identityNumber
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDto'
+        '404':
+          description: Customer not found
+      security:
+        - bearerAuth: [ ]
+
+  /accounts:
+    post:
+      summary: Create a new account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+    get:
+      summary: Get all accounts
+      operationId: getAllAccounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDto'
+
+  /accounts/{accountId}:
+    get:
+      summary: Get an account by ID
+      operationId: getAccountById
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Account not found
+    put:
+      summary: Update an account
+      operationId: updateAccountById
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Account not found
+    delete:
+      summary: Delete an account
+      operationId: deleteAccountById
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Successful response
+        '404':
+          description: Account not found
+
+  /accounts/number/{accountNumber}:
+    get:
+      summary: Get all accounts by account number
+      operationId: getAccountByAccountNumber
+      parameters:
+        - in: path
+          name: accountNumber
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Account not found
+
+  /accounts/customer/{customerId}:
+    get:
+      summary: Get all accounts by customer ID
+      operationId: getAllAccountsByCustomerId
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDto'
+        '404':
+          description: Account not found
+
+  /accounts/transact/{accountId}:
+    post:
+      summary: Top up account balance
+      operationId: topUpAccountByAccountId
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: amount
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+    get:
+      summary: Reduce account balance
+      operationId: reduceAccountByAccountId
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: amount
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+
+  /addresses:
+    post:
+      summary: Create a new address
+      operationId: createAddress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+    get:
+      summary: Get all addresses
+      operationId: getAllAddresses
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressDto'
+
+  /addresses/{addressId}:
+    get:
+      summary: Get an address by ID
+      operationId: getAddressById
+      parameters:
+        - in: path
+          name: addressId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+        '404':
+          description: Address not found
+    put:
+      summary: Update an address
+      operationId: updateAddressById
+      parameters:
+        - in: path
+          name: addressId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressDto'
+        '404':
+          description: Address not found
+    delete:
+      summary: Delete an address
+      operationId: deleteAddressById
+      parameters:
+        - in: path
+          name: addressId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Successful response
+        '404':
+          description: Address not found
+
+  /cards:
+    post:
+      summary: Create a new card
+      operationId: createCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+    get:
+      summary: Get all cards
+      operationId: getAllCards
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+
+  /cards/{cardId}:
+    get:
+      summary: Get card by ID
+      operationId: getCardById
+      parameters:
+        - in: path
+          name: cardId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+    post:
+      summary: Block card
+      operationId: blockCardById
+      parameters:
+        - in: path
+          name: cardId
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: status
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+
+  /cards/customer/{customerId}:
+    get:
+      summary: Get all cards by customer id
+      operationId: getAllCardsByCustomerId
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardDto'
+        '404':
+          description: Card not found
+
+  /transactions:
+    post:
+      summary: Create a new transaction
+      operationId: createTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+        '404':
+          description: Account not found
+
+  /transactions/{transactionId}:
+    get:
+      summary: Get transaction by ID
+      operationId: getTransactionById
+      parameters:
+        - in: path
+          name: transactionId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDto'
+        '404':
+          description: Transaction not found
+
+  /transactions/account/{accountId}:
+    get:
+      summary: Get all transactions
+      operationId: getAllTransactionsByAccountId
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDto'
+        '404':
+          description: Account not found
+
+  /branches:
+    post:
+      summary: Create a new branch
+      operationId: createBranch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BranchDto'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchDto'
+    get:
+      summary: Get all branches
+      operationId: getAllBranches
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BranchDto'
+
+  /branches/{branchId}:
+    get:
+      summary: Get a branch by ID
+      operationId: getBranchById
+      parameters:
+        - in: path
+          name: branchId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchDto'
+        '404':
+          description: Branch not found
+    put:
+      summary: Update a branch
+      operationId: updateBranchById
+      parameters:
+        - in: path
+          name: branchId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BranchDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchDto'
+        '404':
+          description: Branch not found
+
+  /branches/name:
+    get:
+      summary: Get a branch by ID
+      operationId: getBranchByName
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BranchDto'
+        '404':
+          description: Branch not found
+
+  /branches/code:
+    get:
+      summary: Get a branch by ID
+      operationId: getBranchByCode
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchDto'
+        '404':
+          description: Branch not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        emailAddress:
+          type: string
+        identityNumber:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+
+    CustomerDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        identityNumber:
+          type: string
+        phoneNumber:
+          type: string
+        alternateNumber:
+          type: string
+        emailAddress:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressDto'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDto'
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardDto'
+
+    EmployeeDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        employeeNumber:
+          type: string
+
+    AddressDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        street:
+          type: string
+        city:
+          type: string
+        zipCode:
+          type: string
+        province:
+          type: string
+        country:
+          type: string
+
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        accountNumber:
+          type: string
+        balance:
+          type: number
+          format: double
+        accountType:
+          type: string
+        customer:
+          $ref: '#/components/schemas/CustomerDto'
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDto'
+
+    BranchDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        code:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressDto'
+
+    TransactionDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        amount:
+          type: number
+          format: double
+        timestamp:
+          type: string
+          format: date-time
+        account:
+          $ref: '#/components/schemas/AccountDto'
+
+    CardDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        cardNumber:
+          type: string
+        ccv:
+          type: integer
+          format: int32
+        expirationDate:
+          type: string
+          format: date
+        customer:
+          $ref: '#/components/schemas/CustomerDto'
+        status:
+          type: string
+
+    LoginReq:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    StringResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Bearer token
+        successMessage:
+          type: string
+          description: Response success message
+        errorMessage:
+          type: string
+          description: Response error message
+        verificationCode:
+          type: string
+          description: Verification Code
+
+    EmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        subject:
+          type: string
+        text:
+          type: string
